@@ -1,0 +1,9 @@
+vars.json
+output-centos-7.3-x86_64-vmware-iso/
+output-centos-7.3-x86_64-vmware-vmx/
+output-ubuntu-16.04-amd64-vmware-iso/
+output-ubuntu-v16.04-vmware-vmx/
+packer_cache/
+
+output-vmware-iso/
+output-vmware-vmx/

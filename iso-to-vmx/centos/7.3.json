@@ -1,0 +1,49 @@
+{
+  "variables": {
+    "memory": "512",
+    "cpu": "1",
+    "disk_size": "3000",
+    "ssh_username": "vmware",
+    "ssh_password": "VMware1!",
+    "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1611.iso",
+    "iso_checksum": "f2f7367deb90a25822947660c71638333ca0eceeabecc2d631be6cd508c24494",
+    "iso_checksum_type": "sha256",
+    "kickstart": "iso-to-vmx/boot-scripts/centos/7.3.ks",
+    "boot_wait": "10s",
+    "ssh_timeout": "1h",
+    "headless": "true"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "guest_os_type": "centos-64",
+      "output_directory": "output-centos-7.3-x86_64-{{build_type}}",
+      "vm_name": "packer-centos-7.3-x86_64-{{build_type}}",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "headless": "{{user `headless`}}",
+      "http_directory": ".",
+      "boot_wait": "{{user `boot_wait`}}",
+      "boot_command": [
+        "<esc>",
+        "<wait>",
+        "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/{{user `kickstart`}} biosdevname=0 net.ifnames=0",
+        "<enter>"
+      ],
+      "ssh_timeout": "{{user `ssh_timeout`}}",
+      "ssh_username": "vmware",
+      "ssh_password": "VMware1!",
+      "tools_upload_flavor": "linux",
+      "shutdown_command": "sudo systemctl poweroff",
+      "vmx_data": {
+        "cpuid.coresPerSocket": "1",
+        "memsize": "{{user `memory`}}",
+        "numvcpus": "{{user `cpu`}}",
+        "mks.3denable": false,
+        "vhv.enable": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "variables": {
+    "version": null,
+    "role": null,
+    "ssh_username": "vmware",
+    "ssh_password": "VMware1!",
+    "memory": "512",
+    "cpu": "1",
+    "vmx": null,
+    "insecure": "true",
+    "disk_mode": "thin",
+    "cluster": null,
+    "datacenter": null,
+    "datastore": null,
+    "host": null,
+    "password": null,
+    "username": null,
+    "resource_pool": null,
+    "vm_name": "{{user `role`}}-v{{user `version`}}",
+    "vm_network": null,
+    "headless": "true"
+  },
+  "builders": [
+    {
+      "type": "vmware-vmx",
+      "output_directory": "output-{{user `role`}}-v{{user `version`}}-{{build_type}}",
+      "vm_name": "packer-{{user `role`}}-v{{user `version`}}-{{build_type}}",
+      "headless": "{{user `headless`}}",
+      "source_path": "{{user `vmx`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "shutdown_command": "sudo systemctl poweroff",
+      "vmx_data": {
+        "cpuid.coresPerSocket": "1",
+        "memsize": "{{user `memory`}}",
+        "numvcpus": "{{user `cpu`}}",
+        "mks.3denable": false,
+        "vhv.enable": true
+      }
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vsphere",
+      "cluster": "{{user `cluster`}}",
+      "datacenter": "{{user `datacenter`}}",
+      "datastore": "{{user `datastore`}}",
+      "host": "{{user `host`}}",
+      "password": "{{user `password`}}",
+      "username": "{{user `username`}}",
+      "resource_pool": "{{user `resource_pool`}}",
+      "vm_name": "packer-{{user `role`}}-v{{user `version`}}",
+      "disk_mode": "{{user `disk_mode`}}",
+      "insecure": "{{user `insecure`}}",
+      "vm_network": "{{user `vm_network`}}"
+    }
+  ]
+}
